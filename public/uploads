@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatting App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div id="overlay" style=" height:100vh; width: 100vw; background-color: rgba(0, 0, 0, 0.491); z-index: 999;"
+        class="container-fluid position-fixed ">
+        <div style="position: absolute; transform: translate(-50%,-50%); top: 50%; left: 50%;width: 30%;height: 50%;"
+            class="card p-5 ">
+            <label for="inputPassword5" class="form-label"><b>Secret Name🤞</b></label>
+            <input style="background-color: rgb(234, 233, 233);" autocomplete="off" type="text" id="inputPassword5"
+                class="form-control" aria-describedby="passwordHelpBlock">
+            <div id="passwordHelpBlock" class="form-text">
+                Your Name must be Fake, contain letters and numbers, and must not contain spaces, special characters, or
+                emoji.
+            </div>
+            <br><br>
+            <button id="enter" style="min-width: 100%; height: 7vh;border-radius: 10px;" type="button"
+                class="btn btn-success">Enter the Chat,
+                Chalo baatein karein</button>
+        </div>
+    </div>
+    
+    <section class="chat__section">
+       
+        <div class="brand">
+            <img height="40" src="/wassup.png" alt="">
+            <h1>Whatsapp</h1>
+            <div id="online" style="min-width: 5vw; min-height: 5vh;position: absolute;background-color: transparent;border: none;top: 13vh;margin-left: 3vw;"
+                class="card p-2 d-flex align-items-center">
+                <h6 style="font-size: 1.8vh;">Online<span id="onlinenumber"></span></h6>
+                <div id="showname" style="min-width: 1vw;gap: 5px;background-color: red;"class="color d-flex align-items-center">
+                    <!-- <div style="width:0.5vw;height:0.5vw; background-color:rgb(11, 57, 11);border-radius: 50%;" class="green"></div><small >Aditi sharma</small> -->
+                </div>
+
+            </div>
+        </div>
+        <div class="message__area">
+            <!-- <div class="incoming message">
+            <h4>Rakesh</h4>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dolorem?</p>
+          </div>
+
+          <div class="outgoing message">
+            <h4>Rakesh</h4>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut, dolorem?</p>
+          </div> -->
+
+        </div>
+        <div class="input__area">
+            <div class="input__container">
+                <textarea id="textarea" cols="120" rows="1" placeholder="Write a message..."></textarea>
+                <button id="speechButton" type="button"><img src="mic-line.png" alt="jnj"></button>
+            </div>
+            <button id="sendButton" type="button" class="btn btn-success">Send</button>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue-toasted"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+
+     // SpeechRecognition object
+     const recognition = new webkitSpeechRecognition();
+        let isListening = false;
+        
+        // Configure the recognition
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        
+        // Event listener for when speech is recognized
+        recognition.onresult = function(event) {
+            const transcript = event.results[event.results.length - 1][0].transcript;
+            textarea.value = transcript;
+            if (event.results[event.results.length - 1].isFinal) {
+                sendMessage(transcript);
+            }
+        };
+        
+        // Function to start speech recognition
+        function startSpeechRecognition() {
+            if (!isListening) {
+                recognition.start();
+                isListening = true;
+            }
+        }
+        
+        // Function to stop speech recognition
+        function stopSpeechRecognition() {
+            if (isListening) {
+                recognition.stop();
+                isListening = false;
+            }
+        }
+
+        var socket = io();
+        let textarea = document.querySelector("#textarea")
+        let messageArea = document.querySelector('.message__area')
+        let name;
+
+        // Toast configuration
+        Vue.use(Toasted);
+        Vue.toasted.register('error', (message) => message, {
+            type: 'error',
+            duration: 2000
+        });
+
+        document.querySelector("#overlay").addEventListener("mousemove", function () {
+            document.querySelector("input").focus();
+        })
+        document.querySelector("input").addEventListener('keyup', function (e) {
+            if (e.key == 'Enter') {
+                name = document.querySelector("input").value
+                document.querySelector("#overlay").classList.add('d-none');
+            }
+        })
+
+        document.querySelector("#enter").addEventListener("click", function () {
+            if (document.querySelector("input").value.trim().length > 0) {
+                name = document.querySelector("input").value
+                document.querySelector("#overlay").classList.add('d-none');
+            }
+        })
+
+        textarea.addEventListener('keyup', function (e) {
+            if (e.key == 'Enter') {
+                if (e.target.value.trim().length > 0) {
+                    sendMessage(e.target.value)
+                }
+            }
+        })
+
+         // Send message when Send button is clicked
+         document.querySelector("#sendButton").addEventListener("click", function () {
+            const message = textarea.value.trim();
+           
+
+            if (message.length > 0) {
+                sendMessage(message);
+            }
+        });
+
+       // Start speech recognition when Speech button is pressed
+       document.querySelector("#speechButton").addEventListener("mousedown", function () {
+            startSpeechRecognition();
+        });
+
+        // Stop speech recognition when Speech button is released or mouse leaves the button
+        document.querySelector("#speechButton").addEventListener("mouseup", function () {
+            stopSpeechRecognition();
+        });
+
+        document.querySelector("#speechButton").addEventListener("mouseleave", function () {
+            stopSpeechRecognition();
+        });
+
+        function sendMessage(message) {
+            let msg = {
+                username: name,
+                message: message.trim()
+            }
+            //Append
+
+            appendMessage(msg, 'outgoing')
+            textarea.value = "";
+            scrollToBottom();
+
+            //Send to server
+            socket.emit('message', msg)
+        }
+
+        function scrollToBottom() {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
+        
+
+        function appendMessage(msg, type) {
+            let mainDiv = document.createElement('div')
+            let className = type
+            mainDiv.classList.add(className, 'message')
+
+            let markup = `<h4>${msg.username}</h4> 
+           <p>${msg.message}</p>`
+            mainDiv.innerHTML = markup
+
+            messageArea.appendChild(mainDiv)
+            scrollToBottom();// Automatically scroll to the bottom after appending the message
+        }
+        
+            // Add an event listener to scroll to the top when the message area is clicked
+            messageArea.addEventListener('click', function() {
+                messageArea.scrollTop = 0;
+            });
+
+        //Recieve messages
+        socket.on('message', function (msg) {
+            appendMessage(msg, 'incoming')
+            scrollToBottom();
+        })
+
+        function scrollToBottom() {
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
+
+        socket.on("onlineuser", function (data) {
+            document.querySelector("#onlinenumber").innerHTML = `(${data})`
+        })
+    </script>
+
+</body>
+
+</html>

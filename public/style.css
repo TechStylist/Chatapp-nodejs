@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #F8F8F8;
+    font-family: 'Roboto', sans-serif;
+}
+
+section.chat__section {
+    width: 1200px;
+    max-width: 90%;
+    background: #EFEBE3;
+    box-shadow: 0 10px 20px 3px rgba(0, 0, 0, 0.1), 0 5px 16px -2px rgba(0, 0, 0, 0.05);
+}
+.brand {
+    padding: 20px;
+    background: rgb(248, 247, 247);
+    display: flex;
+    align-items: center;
+}
+.brand h1 {
+    text-transform: uppercase;
+    font-size: 20px;
+    color: #444;
+    margin-left: 10px;
+}
+.message__area{
+    height: 500px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    overflow-y:hidden;
+    padding-top: 40px;
+}
+#textarea {
+    width: 100%;
+    border: none;
+    padding: 20px;
+    font-size: 16px;
+    outline: none;
+    resize: none;
+    overflow-y: auto;
+    
+}
+#textarea::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+.message {
+    padding: 20px; 
+    border-radius: 4px; 
+    margin-bottom: 40px;
+    max-width: 300px;
+    position: relative;
+    /* overflow-x: hidden; */
+}
+.incoming {
+    background: #fff;
+    color: black; 
+}
+
+.outgoing {
+    background: #c9edc2;
+    color: black;
+    margin-left: auto;
+    /* max-width: fit-content; */
+  
+}
+.message__area {
+    /* Add these styles to limit the width and enable text wrapping */
+    max-width: 100%;
+    word-wrap: break-word;
+}
+.message__area .message {
+    /* Add these styles to limit the width and enable text wrapping */
+    max-width: 50%;
+    word-wrap: break-word;
+    width: fit-content;
+}
+.message h4 {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    color: #333;
+    font-size: 14px;
+
+}
+
+
+a {
+  color: #00B7FF;
+}
+
+.mb-3 input{
+ width: 20vw;
+border: .5px solid black;
+}
+.mb-3{
+  font-weight: 700;
+}
+.message__area {
+    overflow-y: auto;
+}
+
+.message__area::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+.input__area{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.input__container{
+    display: flex;
+    justify-content: space-between;
+   
+}
+#sendButton{
+  width: 10%;
+  height: 8.45vh;
+  text-align: center;
+
+}
+#speechButton{
+  width: 9%;
+  height: 8.4vh;
+  text-align: center; 
+  border-color: #23ab40;
+  background-color: #23ab40;
+  border-radius: 10%;
+  outline-color: #23ab40;
+}
+#speechButton img{
+    width: 30%;
+    height: 30%;
+}
+
+/* npm run nodemon */

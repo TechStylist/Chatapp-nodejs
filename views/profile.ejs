@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <title>Document</title>
+    <style>
+        .last{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 7vw;
+        }
+        .last a{
+            text-decoration: none;
+        }
+        ::-webkit-scrollbar{
+           width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+         background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+         background: #888;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+         background: #555;
+        }
+        #message{
+            width: 30vw;
+            height: 50vh;
+            background-color: #fff;
+            border: 4px solid #f1f1f1;
+            position: fixed;
+            bottom: 1%;
+            right: 5%;
+            opacity: 0;
+        }
+        #delete{
+            position: absolute;
+            right: 2%;
+        }
+        #delete:hover{
+            background-color: rgb(237, 233, 233);
+        }
+        #txtmsg {
+           min-height: 23vh;
+           resize: none;  
+           background-color: transparent;
+           outline: none;
+           resize: none;
+        }
+       
+    #circle{
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+       border: .2px solid black;
+       overflow: hidden;
+    }
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    #imgform{
+        display: none;
+    }
+    </style>
+</head>
+
+<body>
+   <!-- <button>click and get data</button> -->
+    <div class="container p-3">
+        <div id="circle">
+            <img src="./images/uploads/<%= userdata.profilepic %>" alt="">
+          
+        </div>
+        <form method="post" id="imgform" action="/imgupload" enctype="multipart/form-data">
+            <input id="inputimg" type="file" name="image">
+            <input type="submit" value="Submit">
+        </form>
+        <h3>Hey, <%= userdata.name  %></h3>
+       <h5>Welcome back to SherMail</h5>
+       <button id="create" class="btn btn-sm btn-primary">+ Create New Mail</button>
+       <a class="btn btn-sm btn-outline-danger" href="/logout">logout</a> <br><br>
+       <a class="btn btn-sm btn-info text-light" href="/sent">Check Sent Mails</a>
+       <hr>
+
+       <div class="card overflow-auto p-1">
+        <% userdata.receivedmails.reverse().forEach(function(mail){ %>
+         <div id="details">
+             <h6><%= mail.userid.name[0].toUpperCase() + mail.userid.name.substr(1 , mail.userid.name.length).toLowerCase()  %></h6><br>
+             <p><%= mail.mailtext.length > 15 ?mail.mailtext.substr(0,20) + '...' : mail.mailtext %></p>
+             <div class="last">
+              <a href="/read/mail/<%= mail._id %>">Read more</a>
+              <a href="/delete/mail/<%= mail._id %>"><i class="ri-delete-bin-line"></i></a>
+             </div><br>
+          </div><hr>
+       <% }) %>
+
+     </div>
+      
+       
+       
+       <div id="message">
+        <i id="delete" class="ri-mail-close-line p-1"></i>
+       
+        <form method="post" class="p-3" action="/compose">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input name="email" type="email" placeholder="Email address:" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Message</label>
+              <textarea name="mailtext" id="txtmsg" type="text" placeholder="Type a message..." class="form-control" id="exampleInputPassword1" required></textarea>
+            </div>
+           
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+       </div>
+    </div>
+   
+     <script>
+        document.querySelector("#create").addEventListener("click",function(){
+            document.querySelector("#message").style.opacity= 1
+        });
+        document.querySelector("#delete").addEventListener("click",function(){
+            document.querySelector("#message").style.opacity= 0
+            
+        });
+        document.querySelector("#circle").addEventListener("click",function(){
+            document.querySelector("#inputimg").click();
+        });
+        document.querySelector("#inputimg").addEventListener("change",function(){
+            document.querySelector("#imgform").submit();
+        });
+     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script> 
+</body>
+</html>

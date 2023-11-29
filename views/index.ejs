@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+</head>
+
+<style>
+.container{
+  width: fit-content;
+  height: fit-content;
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ transform: translate(-50%,-50%);
+  
+}
+</style>
+<body class="container border border-secondary d-flex justify-content-center align-items-center flex-column">
+ <h3 class="p-3" style="color: rgb(11, 89, 167);">Login Now</h3>
+ <form method="post" action="/login">
+  <div class="mb-3">
+    <label for="exampleInputUsername" class="form-label">Username</label>
+    <input name="username" type="text" placeholder="Username:" class="form-control" id="exampleInputUsername" aria-describedby="emailHelp" required>
+  
+  </div><br>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input name="password" type="password" placeholder="Password:" class="form-control" id="exampleInputPassword1" required>
+  </div><br>
+ 
+  <button type="submit" class="btn btn-primary">Login Now</button>
+  <a href="/register">Create My Account</a>
+</form>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script> 
+ 
+</body>
+</html>
